@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  typecho:
+    container_name: typecho
+    build: .
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    environment:
+      TIMEZONE: Asia/Shanghai
+      TYPECHO_INSTALL: 1
+      TYPECHO_DB_HOST: mysql
+      TYPECHO_DB_USER: mrcongliu
+      TYPECHO_DB_PASSWORD: 123456
+      TYPECHO_DB_DATABASE: typecho
+      TYPECHO_SITE_URL: http://localhost
+      TYPECHO_USER_NAME: mrcongliu
+      TYPECHO_USER_PASSWORD: password
+      TYPECHO_USER_MAIL: my@email.com
+    volumes:
+      - $PWD/typecho:/app
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    container_name: mysql
+    image: mysql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: typecho
+      MYSQL_USER: mrcongliu
+      MYSQL_PASSWORD: 123456
+    healthcheck:
+      test: "mysql --user=mrcongliu --password=123456 --execute \"SHOW DATABASES;\""
+      interval: 2s
+      timeout: 1s
+      retries: 10
+
+volumes:
+  nginx:
+    name: nginx
+
+networks:
+  default:
+    name: blog
