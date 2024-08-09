@@ -19,7 +19,7 @@ services:
       TYPECHO_USER_PASSWORD: password
       TYPECHO_USER_MAIL: my@email.com
     volumes:
-      - $PWD/typecho:/app
+      - ./typecho:/app/usr
     depends_on:
       mysql:
         condition: service_healthy
