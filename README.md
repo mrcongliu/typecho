@@ -23,3 +23,7 @@ https://cdn.jsdelivr.net/npm/live2d-widget-model-wanko/assets/wanko.model.json
 
 ---
 天气栏功能已经失效，和风天气不在支持原有代码和key逻辑。
+---
+更多主题：
+Typecho-Joe-Theme魔改版.zip
+https://wujingtao.lanzoul.com/ibwWB0vedesb
