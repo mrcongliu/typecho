@@ -1,4 +1,4 @@
-FROM joyqi/typecho:nightly-php8.2-apache
+FROM joyqi/typecho:nightly-php7.4-apache
 RUN \
     apt-get update && \
     apt-get install -y git && \

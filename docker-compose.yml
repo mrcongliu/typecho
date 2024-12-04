@@ -3,7 +3,7 @@ version: "3.9"
 services:
   typecho:
     container_name: typecho
-    build: .
+    image: mrcongliu/typecho:nightly-php7.4-apache
     ports:
       - "80:80"
     restart: unless-stopped
@@ -26,7 +26,7 @@ services:
 
   mysql:
     container_name: mysql
-    image: mysql
+    image: mariadb:10.5
     ports:
       - "3306:3306"
     restart: unless-stopped
