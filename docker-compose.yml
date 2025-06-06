@@ -3,9 +3,9 @@ version: "3.9"
 services:
   typecho:
     container_name: typecho
-    build: .
+    build: ./typecho
     ports:
-      - "80:80"
+      - "8080:80"
     restart: unless-stopped
     environment:
       TIMEZONE: Asia/Shanghai
@@ -14,7 +14,7 @@ services:
       TYPECHO_DB_USER: mrcongliu
       TYPECHO_DB_PASSWORD: 123456
       TYPECHO_DB_DATABASE: typecho
-      TYPECHO_SITE_URL: https://blog.mrcongliu.com/
+      TYPECHO_SITE_URL: https://pi.mrcongliu.com
       TYPECHO_USER_NAME: mrcongliu
       TYPECHO_USER_PASSWORD: password
       TYPECHO_USER_MAIL: mrcongliu@gmail.com
@@ -26,18 +26,17 @@ services:
 
   mysql:
     container_name: mysql
-    image: mysql
+    image: mysql:latest
     ports:
       - "3306:3306"
     restart: unless-stopped
     environment:
-      TZ: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: typecho
       MYSQL_USER: mrcongliu
       MYSQL_PASSWORD: 123456
     healthcheck:
-      test: "mysql --user=mrcongliu --password=123456 --execute \"SHOW DATABASES;\""
+      test: "mysql --user=mrcongliu --password=123456 --execute 'SHOW DATABASES;'"
       interval: 2s
       timeout: 1s
       retries: 10
