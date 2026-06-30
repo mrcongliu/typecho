@@ -1,9 +1,7 @@
-version: "3.9"
-
 services:
   typecho:
     container_name: typecho
-    build: ./typecho
+    build: .
     ports:
       - "8080:80"
     restart: unless-stopped
@@ -11,36 +9,44 @@ services:
       TIMEZONE: Asia/Shanghai
       TYPECHO_INSTALL: 1
       TYPECHO_DB_HOST: mysql
-      TYPECHO_DB_USER: mrcongliu
-      TYPECHO_DB_PASSWORD: 123456
-      TYPECHO_DB_DATABASE: typecho
-      TYPECHO_SITE_URL: https://pi.mrcongliu.com
-      TYPECHO_USER_NAME: mrcongliu
-      TYPECHO_USER_PASSWORD: password
-      TYPECHO_USER_MAIL: mrcongliu@gmail.com
+      TYPECHO_DB_USER: ${DB_USER}
+      TYPECHO_DB_PASSWORD: ${DB_PASSWORD}
+      TYPECHO_DB_DATABASE: ${DB_NAME}
+      TYPECHO_SITE_URL: ${DOMAIN_URL}
+      TYPECHO_USER_NAME: ${ADMIN_USER}
+      TYPECHO_USER_PASSWORD: ${ADMIN_PASSWORD}
+      TYPECHO_USER_MAIL: ${ADMIN_EMAIL}
     volumes:
       - ./typecho:/app/usr
     depends_on:
       mysql:
         condition: service_healthy
+    networks:
+      - blog
 
   mysql:
     container_name: mysql
-    image: mysql:latest
-    ports:
-      - "3306:3306"
+    image: mysql:8.0
     restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: typecho
-      MYSQL_USER: mrcongliu
-      MYSQL_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
     healthcheck:
-      test: "mysql --user=mrcongliu --password=123456 --execute 'SHOW DATABASES;'"
-      interval: 2s
-      timeout: 1s
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 3s
       retries: 10
+    networks:
+      - blog
+
+volumes:
+  mysql_data:
 
 networks:
-  default:
-    name: blog
+  blog:
+    driver: bridge
